@@ -257,3 +257,7 @@ fabric.properties
 
 # For PTUBUS
 configs/sercret.json
+
+# django
+migrations/
+**/migrations/
