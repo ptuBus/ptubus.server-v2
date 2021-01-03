@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    #For ptuBus_Server
+    'ptu_subway',
 ]
 
 MIDDLEWARE = [
