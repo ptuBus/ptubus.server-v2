@@ -1,4 +1,5 @@
 import sqlite3
+import csv
 
 
 def get_line_data(queryset):
@@ -18,3 +19,36 @@ def get_line_data(queryset):
             }
         )
     return line_data
+
+
+def get_station_data():
+    f = open("ptu_subway/KorailDB/line.csv", "r")
+    temp = []
+
+    rows = list(csv.reader(f))
+    station_data = []
+
+    for row in rows:
+        temp2 = []
+        index = 0
+        for data in row:
+            if data.find("◆") != -1:
+                data = data.replace("◆", ",")
+            if index == 6:
+                if data.find(",") != -1:
+                    data = data[: (data.find(","))]
+                data = data.zfill(4)
+            temp2.append(data)
+            index += 1
+        station_data.append(
+            {
+                "stationName": temp2[1],
+                "stationCode": temp2[6],
+                "lineCode": temp2[7],
+                "railLineCode": temp2[12],
+            }
+        )
+
+    f.close()
+    del station_data[0]
+    return station_data
