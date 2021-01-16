@@ -1,0 +1,40 @@
+version: '3'
+
+volumes:
+  db_volume: {}
+
+networks:
+  docker_network:
+    driver: "bridge"
+
+services:
+  ptubus_db:
+    container_name: ptubus_db
+    image: mariadb
+    volumes:
+      - db_volume:/var/lib/mysql
+    env_file:
+      - ./.env.product
+    expose:
+      - 3306
+  ptubus_server:
+    container_name: ptubus_server
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/code
+    environment:
+      MYSQL_HOST: db
+      TZ: "Asia/Seoul"
+    command:
+      - bash
+      - -c
+      - |
+        /wait-for-it.sh db:3306 -t 10
+        gunicorn configs.wsgi:application --bind 0.0.0.0:8000
+    env_file:
+      - ./.env.product
+    depends_on:
+      - db
