@@ -2,36 +2,36 @@ from django.db import models
 
 
 class SubwayLine(models.Model):
-    lineName = models.CharField(
+    line_name = models.CharField(
         max_length=100,
     )
-    lineCode = models.CharField(
+    line_code = models.CharField(
         max_length=100,
     )
-    lineColorCode = models.CharField(
+    line_color_code = models.CharField(
         max_length=100,
     )
-    lineSaidName = models.CharField(
+    line_said_name = models.CharField(
         max_length=100,
         null=True,
     )
 
     def save(self, *args, **kwargs):
-        if not self.lineSaidName:
-            self.lineSaidName = self.lineName
+        if not self.line_said_name:
+            self.line_said_name = self.line_name
         super(SubwayLine, self).save(*args, **kwargs)
 
 
 class SubwayStation(models.Model):
-    stationName = models.CharField(
+    station_name = models.CharField(
         max_length=100,
     )
-    stationCode = models.CharField(
+    station_code = models.CharField(
         max_length=100,
     )
-    lineCode = models.CharField(
+    line_code = models.CharField(
         max_length=100,
     )
-    railLineCode = models.CharField(
+    rail_line_code = models.CharField(
         max_length=100,
     )
