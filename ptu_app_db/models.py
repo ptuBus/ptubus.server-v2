@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+
+class AppDB(models.Model):
+    file_key = models.CharField(max_length=100)
