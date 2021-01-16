@@ -43,7 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     # For ptuBus_Server
+    "ptu_app_db",
+    "ptu_bus",
+    "ptu_school",
     "ptu_subway",
+    "ptu_train",
 ]
 
 MIDDLEWARE = [
