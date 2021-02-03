@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "rest_framework",
     # For ptuBus_Server
+    "foundation",
     "ptu_app_db",
     "ptu_bus",
     "ptu_school",
