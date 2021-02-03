@@ -2,11 +2,14 @@ from django.db import models
 
 
 class BusTerminal(models.Model):
-    start_station_name = models.CharField(max_length=100)
+    start_station_name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
     start_station_id = models.CharField(max_length=100)
     end_station_name = models.CharField(max_length=100)
     end_station_id = models.CharField(max_length=100)
-    is_express = models.IntegerField()
+    is_express = models.BooleanField()
 
 
 class BusTimeTable(models.Model):
