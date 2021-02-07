@@ -1,3 +1,4 @@
+import json
 from urllib import parse, request
 
 from foundation import get_api_key
@@ -15,9 +16,9 @@ class BaseCrawler:
         url = self.make_url(url)
         request_url = request.Request(url)
         response = request.urlopen(request_url)
-        return response.read().decode("utf-8")
+        return json.loads(response.read().decode("utf-8"))
 
-    def parsing(self):
+    def collect_data(self):
         raise NotImplementedError
 
 
@@ -35,33 +36,32 @@ class BusTerminalCrawler(BaseCrawler):
             },
         ]
         self.query = [("apiKey", self.api_key), ("CID", cid)]
+        self.pyeong_taek_station_name = ["평택시외버스터미널", "평택고속버스터미널"]
 
-    def parsing(self):
+    def collect_data(self):
         for bus_type in self.url:
-            data = self.open_url(bus_type["url"])
+            odsay_data = self.open_url(bus_type["url"])
             is_express = bus_type["is_express"]
-            t = data["result"]
-            for i in range(len(t)):
-                terminal_name = data["result"][i]["stationName"]
-                if terminal_name == "평택시외버스터미널" or terminal_name == "평택고속버스터미널":
-                    start_station_id = data["result"][i]["stationID"]
-                    start_station_name = data["result"][i]["stationName"]
-                    results = data["result"][i]["destinationTerminals"]
-                    for result in results:
-                        end_station_name = result["stationName"]
-                        BusTerminal(
-                            start_station_name=start_station_name,
-                            start_station_id=start_station_id,
-                            end_station_name=end_station_name[
-                                end_station_name.find("/") + 1 :
-                            ],
-                            end_station_id=result["stationID"],
-                            is_express=int(is_express),
-                        ).save()
+            for start_terminal in odsay_data["result"]:
+                if (
+                    start_terminal["haveDestinationTerminals"]
+                    and start_terminal["stationName"] in self.pyeong_taek_station_name
+                ):
+                    for destination_terminal in start_terminal["destinationTerminals"]:
+                        bus_terminal_filter = BusTerminal.objects.filter(
+                            end_station_id=destination_terminal["stationID"]
+                        )
+                        if not bus_terminal_filter.exists():
+                            BusTerminal(
+                                start_station_name=start_terminal["stationName"],
+                                start_station_id=start_terminal["stationID"],
+                                end_station_name=destination_terminal["stationName"][
+                                    destination_terminal["stationName"].find("/") + 1 :
+                                ],
+                                end_station_id=destination_terminal["stationID"],
+                                is_express=int(is_express),
+                            ).save()
 
 
 if __name__ == "__main__":
-    import django
-
-    django.setup()
-    print(BusTerminalCrawler().parsing())
+    print(BusTerminalCrawler().collect_data())
