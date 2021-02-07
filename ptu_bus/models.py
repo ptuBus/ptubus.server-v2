@@ -11,6 +11,9 @@ class BusTerminal(models.Model):
     end_station_id = models.CharField(max_length=100)
     is_express = models.BooleanField()
 
+    def __str__(self):
+        return f"{self.start_station_name}/{self.end_station_name}"
+
 
 class BusTimeTable(models.Model):
     bus_terminal = models.ForeignKey(
@@ -24,3 +27,6 @@ class BusTimeTable(models.Model):
     night_fare = models.CharField(max_length=100)
     schedule = models.CharField(max_length=100)
     night_schedule = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.bus_terminal.end_station_name}"
