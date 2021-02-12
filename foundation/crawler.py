@@ -7,6 +7,7 @@ django.setup()
 
 from foundation import get_api_key
 from ptu_bus.models import BusTerminal, BusTimeTable
+from ptu_train.models import TrainTerminal, TrainTimeTable
 
 
 class BaseCrawler:
@@ -126,6 +127,35 @@ class BusTimeTableCrawler(BaseCrawler):
                 ).save()
 
 
+class TrainTerminalCrawler(BaseCrawler):
+    def __init__(self, cid="1220"):
+        super().__init__()
+        self.url = [{"url": "https://api.odsay.com/v1/api/trainTerminals?"}]
+        self.query = [("apiKey", self.api_key), ("CID", cid)]
+        self.pyeong_taek_station_name = ["평택"]
+
+    def collect_data(self):
+        for train_type in self.url:
+            odsay_data = self.open_url(train_type["url"])
+            for start_terminal in odsay_data["result"]:
+                if (
+                    start_terminal["haveDestinationTerminals"]
+                    and start_terminal["stationName"] in self.pyeong_taek_station_name
+                ):
+                    for arrival_terminal in start_terminal["arrivalTerminals"]:
+                        train_terminal_filter = TrainTerminal.objects.filter(
+                            start_terminal_id=arrival_terminal["stationID"]
+                        )
+                        if not train_terminal_filter.exists():
+                            TrainTerminal(
+                                start_terminal_id=start_terminal["stationID"],
+                                start_terminal_name=start_terminal["stationName"],
+                                end_terminal_id=arrival_terminal["stationID"],
+                                end_terminal_name=arrival_terminal["stationName"],
+                            ).save()
+
+
 if __name__ == "__main__":
     BusTerminalCrawler().collect_data()
     print(BusTimeTableCrawler().collect_data())
+    TrainTerminalCrawler().collect_data()
