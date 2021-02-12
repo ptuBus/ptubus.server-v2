@@ -1,16 +1,16 @@
 from django.db import models
 
 
-class TrainStation(models.Model):
-    start_station_name = models.CharField(max_length=100)
-    start_station_id = models.CharField(max_length=100)
-    end_station_name = models.CharField(max_length=100)
-    end_station_id = models.CharField(max_length=100)
+class TrainTerminal(models.Model):
+    start_terminal_name = models.CharField(max_length=100)
+    start_terminal_id = models.CharField(max_length=100)
+    end_terminal_name = models.CharField(max_length=100)
+    end_terminal_id = models.CharField(max_length=100)
 
 
 class TrainTimeTable(models.Model):
-    train_station = models.ForeignKey(
-        TrainStation,
+    train_terminal = models.ForeignKey(
+        TrainTerminal,
         related_name="related_train_timetable",
         on_delete=models.CASCADE,
     )
