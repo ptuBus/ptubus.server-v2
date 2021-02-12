@@ -1,30 +1,30 @@
 from django.contrib import admin
 from ptu_train.models import (
-    TrainStation,
+    TrainTerminal,
     TrainTimeTable,
 )
 
 
-@admin.register(TrainStation)
-class TrainStationAdmin(admin.ModelAdmin):
+@admin.register(TrainTerminal)
+class TrainTerminalAdmin(admin.ModelAdmin):
     fields = (
-        "start_station_name",
-        "start_station_id",
-        "end_station_name",
-        "end_station_id",
+        "start_terminal_name",
+        "start_terminal_id",
+        "end_terminal_name",
+        "end_terminal_id",
     )
     list_display = (
-        "start_station_name",
-        "start_station_id",
-        "end_station_name",
-        "end_station_id",
+        "start_terminal_name",
+        "start_terminal_id",
+        "end_terminal_name",
+        "end_terminal_id",
     )
 
 
 @admin.register(TrainTimeTable)
 class TrainTimeTableAdmin(admin.ModelAdmin):
     fields = (
-        "train_station",
+        "train_terminal",
         "rail_name",
         "train_class",
         "departure_time",
@@ -33,7 +33,7 @@ class TrainTimeTableAdmin(admin.ModelAdmin):
         "daily_type_code",
     )
     list_display = (
-        "train_station",
+        "train_terminal",
         "rail_name",
         "train_class",
         "departure_time",
