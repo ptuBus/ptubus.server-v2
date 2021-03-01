@@ -7,6 +7,9 @@ class TrainTerminal(models.Model):
     end_terminal_name = models.CharField(max_length=100)
     end_terminal_id = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.start_terminal_name}/{self.end_terminal_name}"
+
 
 class TrainTimeTable(models.Model):
     train_terminal = models.ForeignKey(
@@ -20,3 +23,4 @@ class TrainTimeTable(models.Model):
     schedule = models.CharField(max_length=100)
     waste_time = models.CharField(max_length=100)
     daily_type_code = models.CharField(max_length=100)
+
