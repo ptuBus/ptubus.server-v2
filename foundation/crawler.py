@@ -155,7 +155,40 @@ class TrainTerminalCrawler(BaseCrawler):
                             ).save()
 
 
+class TrainTimeTableCrawler(BaseCrawler):
+    def __init__(self):
+        super().__init__()
+        self.train_terminal_data = TrainTerminal.objects.all()
+        self.url = "https://api.odsay.com/v1/api/trainServiceTime?"
+
+    def collect_data(self):
+        for train_terminal in self.train_terminal_data:
+
+            self.query = [
+                ("apiKey", self.api_key),
+                ("startStationID", train_terminal.start_terminal_id),
+                ("endStationID", train_terminal.end_terminal_id),
+            ]
+
+            odsay_data = self.open_url(self.url)
+
+            train_timetable_data = odsay_data["result"]["station"]
+
+            for result in train_timetable_data:
+                TrainTimeTable(
+                    train_terminal=train_terminal,
+                    rail_name=result["railName"],
+                    train_class=result["trainClass"],
+                    departure_time=result["departureTime"],
+                    schedule=result["arrivalTime"],
+                    waste_time=result["wasteTime"],
+                    daily_type_code=result["runDay"],
+                ).save()
+
+
 if __name__ == "__main__":
     BusTerminalCrawler().collect_data()
     print(BusTimeTableCrawler().collect_data())
+
     TrainTerminalCrawler().collect_data()
+    print(TrainTimeTableCrawler().collect_data())
