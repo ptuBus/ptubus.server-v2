@@ -1,12 +1,5 @@
 version: '3'
 
-volumes:
-  db_volume: {}
-
-networks:
-  docker_network:
-    driver: "bridge"
-
 services:
   ptubus_server:
     env_file:
@@ -15,10 +8,10 @@ services:
     build:
       context: .
     ports:
-      - 8000:8000
+      - 7777:7777
     volumes:
       - .:/code
     environment:
       TZ: "Asia/Seoul"
     command:
-        python manage.py runserver 0.0.0.0:8000
+        python manage.py runserver 0.0.0.0:7777
