@@ -2,6 +2,10 @@ from django.db import models
 
 
 class SubwayLine(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     line_name = models.CharField(
         max_length=100,
     )
@@ -23,6 +27,10 @@ class SubwayLine(models.Model):
 
 
 class SubwayStation(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     station_name = models.CharField(
         max_length=100,
     )
