@@ -15,6 +15,7 @@ class BusTerminalAdmin(admin.ModelAdmin):
         "is_express",
     )
     list_display = (
+        "key",
         "start_station_name",
         "start_station_id",
         "end_station_name",
@@ -26,6 +27,7 @@ class BusTerminalAdmin(admin.ModelAdmin):
 @admin.register(BusTimeTable)
 class BusTimeTableAdmin(admin.ModelAdmin):
     fields = (
+        "key",
         "bus_terminal",
         "waste_time",
         "normal_fare",

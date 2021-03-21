@@ -2,6 +2,10 @@ from django.db import models
 
 
 class BusTerminal(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     start_station_name = models.CharField(
         max_length=100,
     )
@@ -15,6 +19,10 @@ class BusTerminal(models.Model):
 
 
 class BusTimeTable(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     bus_terminal = models.ForeignKey(
         BusTerminal,
         related_name="related_bus_timetable",
