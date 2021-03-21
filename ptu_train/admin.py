@@ -14,6 +14,7 @@ class TrainTerminalAdmin(admin.ModelAdmin):
         "end_terminal_id",
     )
     list_display = (
+        "key",
         "start_terminal_name",
         "start_terminal_id",
         "end_terminal_name",
@@ -33,6 +34,7 @@ class TrainTimeTableAdmin(admin.ModelAdmin):
         "daily_type_code",
     )
     list_display = (
+        "key",
         "train_terminal",
         "rail_name",
         "train_class",

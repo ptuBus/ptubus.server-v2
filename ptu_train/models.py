@@ -2,6 +2,10 @@ from django.db import models
 
 
 class TrainTerminal(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     start_terminal_name = models.CharField(max_length=100)
     start_terminal_id = models.CharField(max_length=100)
     end_terminal_name = models.CharField(max_length=100)
@@ -12,6 +16,10 @@ class TrainTerminal(models.Model):
 
 
 class TrainTimeTable(models.Model):
+    key = models.IntegerField(
+        default=None,
+        editable=False,
+    )
     train_terminal = models.ForeignKey(
         TrainTerminal,
         related_name="related_train_timetable",
@@ -23,4 +31,3 @@ class TrainTimeTable(models.Model):
     schedule = models.CharField(max_length=100)
     waste_time = models.CharField(max_length=100)
     daily_type_code = models.CharField(max_length=100)
-
