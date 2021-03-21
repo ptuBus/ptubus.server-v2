@@ -1,6 +1,10 @@
 import json
 from urllib import parse, request
 
+import django
+
+django.setup()
+
 from foundation import get_api_key
 from ptu_bus.models import BusTerminal, BusTimeTable
 from ptu_train.models import TrainTerminal, TrainTimeTable
@@ -40,6 +44,7 @@ class BusTerminalCrawler(BaseCrawler):
         self.pyeong_taek_station_name = ["평택시외버스터미널", "평택고속버스터미널"]
 
     def collect_data(self):
+        key = 1
         for bus_type in self.url:
             odsay_data = self.open_url(bus_type["url"])
             is_express = bus_type["is_express"]
@@ -54,6 +59,7 @@ class BusTerminalCrawler(BaseCrawler):
                         )
                         if not bus_terminal_filter.exists():
                             BusTerminal(
+                                key=key,
                                 start_station_name=start_terminal["stationName"],
                                 start_station_id=start_terminal["stationID"],
                                 end_station_name=destination_terminal["stationName"][
@@ -62,6 +68,7 @@ class BusTerminalCrawler(BaseCrawler):
                                 end_station_id=destination_terminal["stationID"],
                                 is_express=int(is_express),
                             ).save()
+                            key += 1
 
 
 class BusTimeTableCrawler(BaseCrawler):
@@ -87,6 +94,7 @@ class BusTimeTableCrawler(BaseCrawler):
             return time
 
     def collect_data(self):
+        key = 1
         for bus_terminal in self.bus_terminal_data:
             url = self.url[bus_terminal.is_express]
 
@@ -112,7 +120,9 @@ class BusTimeTableCrawler(BaseCrawler):
                 night_schedule = "0"
 
             for schedule in schedules:
+
                 BusTimeTable(
+                    key=key,
                     bus_terminal=bus_terminal,
                     waste_time=self.min_2_hour(bus_timetable_data["wasteTime"]),
                     normal_fare=bus_timetable_data["normalFare"],
@@ -121,6 +131,7 @@ class BusTimeTableCrawler(BaseCrawler):
                     schedule=schedule,
                     night_schedule=night_schedule,
                 ).save()
+                key += 1
 
 
 class TrainTerminalCrawler(BaseCrawler):
@@ -131,6 +142,7 @@ class TrainTerminalCrawler(BaseCrawler):
         self.pyeong_taek_station_name = ["평택"]
 
     def collect_data(self):
+        key = 1
         for train_type in self.url:
             odsay_data = self.open_url(train_type["url"])
             for start_terminal in odsay_data["result"]:
@@ -140,15 +152,17 @@ class TrainTerminalCrawler(BaseCrawler):
                 ):
                     for arrival_terminal in start_terminal["arrivalTerminals"]:
                         train_terminal_filter = TrainTerminal.objects.filter(
-                            start_terminal_id=arrival_terminal["stationID"]
+                            end_terminal_id=arrival_terminal["stationID"]
                         )
                         if not train_terminal_filter.exists():
                             TrainTerminal(
+                                key=key,
                                 start_terminal_id=start_terminal["stationID"],
                                 start_terminal_name=start_terminal["stationName"],
                                 end_terminal_id=arrival_terminal["stationID"],
                                 end_terminal_name=arrival_terminal["stationName"],
                             ).save()
+                            key += 1
 
 
 class TrainTimeTableCrawler(BaseCrawler):
@@ -158,6 +172,7 @@ class TrainTimeTableCrawler(BaseCrawler):
         self.url = "https://api.odsay.com/v1/api/trainServiceTime?"
 
     def collect_data(self):
+        key = 1
         for train_terminal in self.train_terminal_data:
             self.query = [
                 ("apiKey", self.api_key),
@@ -171,6 +186,7 @@ class TrainTimeTableCrawler(BaseCrawler):
 
             for result in train_timetable_data:
                 TrainTimeTable(
+                    key=key,
                     train_terminal=train_terminal,
                     rail_name=result["railName"],
                     train_class=result["trainClass"],
@@ -179,3 +195,13 @@ class TrainTimeTableCrawler(BaseCrawler):
                     waste_time=result["wasteTime"],
                     daily_type_code=result["runDay"],
                 ).save()
+                key += 1
+
+
+if __name__ == "__main__":
+
+    BusTerminalCrawler().collect_data()
+    print(BusTimeTableCrawler().collect_data())
+
+    TrainTerminalCrawler().collect_data()
+    print(TrainTimeTableCrawler().collect_data())

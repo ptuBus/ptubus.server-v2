@@ -7,6 +7,7 @@ from ptu_subway.models import (
 
 @admin.register(SubwayLine)
 class SubwayLineAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "line_name",
         "line_code",
@@ -23,6 +24,7 @@ class SubwayLineAdmin(admin.ModelAdmin):
 
 @admin.register(SubwayStation)
 class SubwayStationAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "station_name",
         "station_code",

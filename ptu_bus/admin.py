@@ -7,6 +7,7 @@ from ptu_bus.models import (
 
 @admin.register(BusTerminal)
 class BusTerminalAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "start_station_name",
         "start_station_id",
@@ -26,8 +27,8 @@ class BusTerminalAdmin(admin.ModelAdmin):
 
 @admin.register(BusTimeTable)
 class BusTimeTableAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
-        "key",
         "bus_terminal",
         "waste_time",
         "normal_fare",
@@ -37,6 +38,7 @@ class BusTimeTableAdmin(admin.ModelAdmin):
         "night_schedule",
     )
     list_display = (
+        "key",
         "bus_terminal",
         "waste_time",
         "normal_fare",

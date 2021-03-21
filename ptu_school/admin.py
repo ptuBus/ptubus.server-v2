@@ -4,6 +4,7 @@ from ptu_school.models import SchoolBusTimeTable
 
 @admin.register(SchoolBusTimeTable)
 class SchoolBusTimeTableAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "key",
         "start_station_name",

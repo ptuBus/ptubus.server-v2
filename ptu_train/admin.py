@@ -7,6 +7,7 @@ from ptu_train.models import (
 
 @admin.register(TrainTerminal)
 class TrainTerminalAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "start_terminal_name",
         "start_terminal_id",
@@ -24,6 +25,7 @@ class TrainTerminalAdmin(admin.ModelAdmin):
 
 @admin.register(TrainTimeTable)
 class TrainTimeTableAdmin(admin.ModelAdmin):
+    ordering = ("key",)
     fields = (
         "train_terminal",
         "rail_name",
