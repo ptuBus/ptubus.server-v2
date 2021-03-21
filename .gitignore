@@ -260,3 +260,6 @@ fabric.properties
 
 #For Django
 staticfiles
+
+#For Mac
+.DS_Store
