@@ -5,6 +5,7 @@ from ptu_school.models import SchoolBusTimeTable
 @admin.register(SchoolBusTimeTable)
 class SchoolBusTimeTableAdmin(admin.ModelAdmin):
     fields = (
+        "key",
         "start_station_name",
         "start_station_id",
         "end_station_name",
@@ -13,6 +14,7 @@ class SchoolBusTimeTableAdmin(admin.ModelAdmin):
         "up_down_type_code",
     )
     list_display = (
+        "key",
         "start_station_name",
         "start_station_id",
         "end_station_name",
