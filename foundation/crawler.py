@@ -1,10 +1,6 @@
 import json
 from urllib import parse, request
 
-import django
-
-django.setup()
-
 from foundation import get_api_key
 from ptu_bus.models import BusTerminal, BusTimeTable
 from ptu_train.models import TrainTerminal, TrainTimeTable
@@ -14,10 +10,10 @@ class BaseCrawler:
     def __init__(self):
         self.api_key = get_api_key()
 
-    def make_url(self, url):
+    def make_url(self, url: str):
         return url + parse.urlencode(self.query, encoding="UTF-8", doseq=True)
 
-    def open_url(self, url):
+    def open_url(self, url: str):
         url = self.make_url(url)
         request_url = request.Request(url)
         response = request.urlopen(request_url)
@@ -77,11 +73,11 @@ class BusTimeTableCrawler(BaseCrawler):
             "https://api.odsay.com/v1/api/expressServiceTime?",
         ]
 
-    def clean_schedule(self, schedule):
+    def split_schedule(self, schedule: str):
         replace_all = schedule.replace("/", " ")
         return "".join(replace_all).split()
 
-    def min_2_hour(self, time):
+    def min_2_hour(self, time: str):
         if time.find(":") == -1:
             time = int(time)
             hour = time // 60
@@ -103,7 +99,7 @@ class BusTimeTableCrawler(BaseCrawler):
             odsay_data = self.open_url(url)
 
             bus_timetable_data = odsay_data["result"]["station"][0]
-            schedules = self.clean_schedule(bus_timetable_data["schedule"])
+            schedules = self.split_schedule(bus_timetable_data["schedule"])
 
             if bus_timetable_data.get("specialFare"):
                 special_fare = bus_timetable_data["specialFare"]
@@ -163,7 +159,6 @@ class TrainTimeTableCrawler(BaseCrawler):
 
     def collect_data(self):
         for train_terminal in self.train_terminal_data:
-
             self.query = [
                 ("apiKey", self.api_key),
                 ("startStationID", train_terminal.start_terminal_id),
@@ -184,11 +179,3 @@ class TrainTimeTableCrawler(BaseCrawler):
                     waste_time=result["wasteTime"],
                     daily_type_code=result["runDay"],
                 ).save()
-
-
-if __name__ == "__main__":
-    BusTerminalCrawler().collect_data()
-    print(BusTimeTableCrawler().collect_data())
-
-    TrainTerminalCrawler().collect_data()
-    print(TrainTimeTableCrawler().collect_data())
