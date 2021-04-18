@@ -1,7 +1,4 @@
 import json
-import requests
-
-from bs4 import BeautifulSoup
 from urllib import parse, request
 
 import django
@@ -123,6 +120,7 @@ class BusTimeTableCrawler(BaseCrawler):
                 night_schedule = "0"
 
             for schedule in schedules:
+
                 BusTimeTable(
                     key=key,
                     bus_terminal=bus_terminal,
@@ -200,60 +198,10 @@ class TrainTimeTableCrawler(BaseCrawler):
                 key += 1
 
 
-class SchoolBusCrawler(BaseCrawler):
-    def __init__(self):
-        super().__init__()
-        self.url = "https://www.ptu.ac.kr/contents/www/cor/traffic_2.html"
-
-    def open_url(self, url: str):
-        req = requests.get(self.url)
-        html = req.text
-        soup = BeautifulSoup(html, "html.parser")
-        return soup
-
-    def parsing_selector(self, selector):
-        soup = self.open_url("_")
-        selector = soup.select(selector)
-        return selector
-
-    # def clean_list(self, all_list: list):
-    #     pDataList = []
-    #     toSchool = []
-    #     toSubway = []
-    #
-    #     all_list = " ".join(all_list).split()
-    #     for i in range(len(all_list)):
-    #         if (i % 4) < 2:
-    #             toSchool.append(all_list[i].zfill(5))
-    #         else:
-    #             toSubway.append(all_list[i].zfill(5))
-    #
-    #     toSchool.sort()
-    #     toSubway.sort()
-    #     pDataList.append(toSchool)
-    #     pDataList.append(toSubway)
-    #     return pDataList
-
-    def makeDict(self, parsing_data_list: list):
-        temp = []
-
-        # for i in range(len(parsing_data_list)):
-        #     # 상행
-
-    def collect_data(self):
-        parsing_list = self.parsing_selector(
-            "div > div.table7 > table > tbody > tr > td"
-        )
-        print(parsing_list)
-        for i in range(2, len(parsing_list)):
-            print(i)
-            if i % 2 == 0:
-                dList = [str(parsing_list[i]), "0", "롯데", "1", "평택대학교", "U"]
-                print(dList)
-            elif i % 2 == 1:
-                dList = [str(parsing_list[i]), "1", "평택대학교", "0", "롯데", "D"]
-                print(dList)
-
-
 if __name__ == "__main__":
-    print(SchoolBusCrawler().collect_data())
+
+    BusTerminalCrawler().collect_data()
+    print(BusTimeTableCrawler().collect_data())
+
+    TrainTerminalCrawler().collect_data()
+    print(TrainTimeTableCrawler().collect_data())
