@@ -1,8 +1,12 @@
 import json
-from urllib import parse, request
+import requests
+
+from bs4 import BeautifulSoup
+from urllib import parse
 
 from foundation import get_api_key
 from ptu_bus.models import BusTerminal, BusTimeTable
+from ptu_school.models import SchoolBusTimeTable
 from ptu_train.models import TrainTerminal, TrainTimeTable
 
 
@@ -16,9 +20,8 @@ class BaseCrawler:
 
     def open_url(self, url: str):
         url = self.make_url(url)
-        request_url = request.Request(url)
-        response = request.urlopen(request_url)
-        return json.loads(response.read().decode("utf-8"))
+        req = requests.get(url)
+        return json.loads(req.text)
 
     def collect_data(self):
         raise NotImplementedError
@@ -190,3 +193,67 @@ class TrainTimeTableCrawler(BaseCrawler):
                     daily_type_code=result["runDay"],
                 ).save()
                 key += 1
+
+
+class SchoolBusTimeTableCrawler(BaseCrawler):
+    queryset = SchoolBusTimeTable.objects.all()
+
+    def __init__(self):
+        self.url = "https://www.ptu.ac.kr/contents/www/cor/traffic_2.html"
+        self.selector = "div > div.table7 > table > tbody > tr > td"
+
+    def open_url(self):
+        req = requests.get(self.url)
+        soup = BeautifulSoup(req.text, "html.parser")
+        parsing_data = soup.select(self.selector)
+        return parsing_data
+
+    def split_list(self, all_list):
+        parsing_data_list = []
+        to_school = []
+        to_subway = []
+
+        all_list = " ".join(all_list).split()
+        for i in range(len(all_list)):
+            if (i % 4) < 2:
+                to_school.append(all_list[i].zfill(5))
+            else:
+                to_subway.append(all_list[i].zfill(5))
+
+        to_school.sort()
+        to_subway.sort()
+        parsing_data_list.append(to_school)
+        parsing_data_list.append(to_subway)
+        return parsing_data_list
+
+    def collect_data(self):
+        all_list = []
+        key = 1
+        parsing_data = self.open_url()
+        for i in range(2, len(parsing_data)):
+            all_list.append(parsing_data[i].text.strip())
+        clean_list = self.split_list(all_list)
+        for i in range(len(clean_list)):
+            if i == 0:
+                for j in range(len(clean_list[0])):
+                    SchoolBusTimeTable(
+                        key=key,
+                        start_station_name="롯데",
+                        start_station_id="0",
+                        end_station_name="평택대학교",
+                        end_station_id="1",
+                        schedule=str(clean_list[0][j]),
+                        up_down_type_code="U",
+                    ).save()
+            elif i == 1:
+                for j in range(len(clean_list[1])):
+                    SchoolBusTimeTable(
+                        key=key,
+                        start_station_name="평택대학교",
+                        start_station_id="1",
+                        end_station_name="롯데",
+                        end_station_id="0",
+                        schedule=str(clean_list[1][j]),
+                        up_down_type_code="D",
+                    ).save()
+            key += 1
