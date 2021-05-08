@@ -8,7 +8,7 @@ from ptu_subway.models import (
     SubwayLine,
     SubwayStation,
 )
-from ptu_subway.serializer import (
+from ptu_subway.serializers import (
     SubwayLineSerializer,
     SubwayStationSerializer,
 )
