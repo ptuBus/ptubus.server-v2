@@ -56,7 +56,7 @@ class BusTerminalCrawler(BaseCrawler):
                     and start_terminal["stationName"] in self.pyeong_taek_station_name
                 ):
                     for destination_terminal in start_terminal["destinationTerminals"]:
-                        BusTerminal(
+                        BusTerminal.objects.create(
                             key=key,
                             start_station_name=start_terminal["stationName"],
                             start_station_id=start_terminal["stationID"],
@@ -65,7 +65,7 @@ class BusTerminalCrawler(BaseCrawler):
                             ],
                             end_station_id=destination_terminal["stationID"],
                             is_express=int(is_express),
-                        ).save()
+                        )
                         key += 1
 
 
@@ -120,7 +120,7 @@ class BusTimeTableCrawler(BaseCrawler):
                 night_schedule = "0"
 
             for schedule in schedules:
-                BusTimeTable(
+                BusTimeTable.objects.create(
                     key=key,
                     bus_terminal=bus_terminal,
                     waste_time=self.min_2_hour(bus_timetable_data["wasteTime"]),
@@ -129,7 +129,7 @@ class BusTimeTableCrawler(BaseCrawler):
                     night_fare=bus_timetable_data["nightFare"],
                     schedule=schedule,
                     night_schedule=night_schedule,
-                ).save()
+                )
                 key += 1
 
 
@@ -150,13 +150,13 @@ class TrainTerminalCrawler(BaseCrawler):
                 and start_terminal["stationName"] in "평택"
             ):
                 for arrival_terminal in start_terminal["arrivalTerminals"]:
-                    TrainTerminal(
+                    TrainTerminal.objects.create(
                         key=key,
                         start_terminal_id=start_terminal["stationID"],
                         start_terminal_name=start_terminal["stationName"],
                         end_terminal_id=arrival_terminal["stationID"],
                         end_terminal_name=arrival_terminal["stationName"],
-                    ).save()
+                    )
                     key += 1
 
 
@@ -182,7 +182,7 @@ class TrainTimeTableCrawler(BaseCrawler):
             train_timetable_data = odsay_data["result"]["station"]
 
             for result in train_timetable_data:
-                TrainTimeTable(
+                TrainTimeTable.objects.create(
                     key=key,
                     train_terminal=train_terminal,
                     rail_name=result["railName"],
@@ -191,7 +191,7 @@ class TrainTimeTableCrawler(BaseCrawler):
                     schedule=result["arrivalTime"],
                     waste_time=result["wasteTime"],
                     daily_type_code=result["runDay"],
-                ).save()
+                )
                 key += 1
 
 
@@ -236,7 +236,7 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
         for i in range(len(clean_list)):
             if i == 0:
                 for j in range(len(clean_list[0])):
-                    SchoolBusTimeTable(
+                    SchoolBusTimeTable.objects.create(
                         key=key,
                         start_station_name="롯데",
                         start_station_id="0",
@@ -244,10 +244,10 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
                         end_station_id="1",
                         schedule=str(clean_list[0][j]),
                         up_down_type_code="U",
-                    ).save()
+                    )
             elif i == 1:
                 for j in range(len(clean_list[1])):
-                    SchoolBusTimeTable(
+                    SchoolBusTimeTable.objects.create(
                         key=key,
                         start_station_name="평택대학교",
                         start_station_id="1",
@@ -255,5 +255,5 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
                         end_station_id="0",
                         schedule=str(clean_list[1][j]),
                         up_down_type_code="D",
-                    ).save()
+                    )
             key += 1
