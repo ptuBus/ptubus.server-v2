@@ -12,7 +12,7 @@ class TrainTerminal(models.Model):
     end_terminal_id = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.start_terminal_name}/{self.end_terminal_name}"
+        return {self.end_terminal_name}
 
 
 class TrainTimeTable(models.Model):

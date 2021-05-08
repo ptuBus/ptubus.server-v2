@@ -199,6 +199,7 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
     queryset = SchoolBusTimeTable.objects.all()
 
     def __init__(self):
+        super().__init__()
         self.url = "https://www.ptu.ac.kr/contents/www/cor/traffic_2.html"
         self.selector = "div > div.table7 > table > tbody > tr > td"
 
@@ -245,6 +246,7 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
                         schedule=str(clean_list[0][j]),
                         up_down_type_code="U",
                     )
+                    key += 1
             elif i == 1:
                 for j in range(len(clean_list[1])):
                     SchoolBusTimeTable.objects.create(
@@ -256,4 +258,4 @@ class SchoolBusTimeTableCrawler(BaseCrawler):
                         schedule=str(clean_list[1][j]),
                         up_down_type_code="D",
                     )
-            key += 1
+                    key += 1
