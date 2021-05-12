@@ -4,15 +4,15 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ptu_subway.models import (
+from .models import (
     SubwayLine,
     SubwayStation,
 )
-from ptu_subway.serializers import (
+from .serializers import (
     SubwayLineSerializer,
     SubwayStationSerializer,
 )
-from ptu_subway import (
+from . import (
     get_line_data,
     get_station_data,
 )

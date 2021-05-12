@@ -1,16 +1,16 @@
 from django.urls import path
 
-from .views import TrainTerminalListView, TrainTimeTableListView
+from .views import BusTerminalListView, BusTimeTableListView
 
 urlpatterns = [
     path(
         "terminal/",
-        TrainTerminalListView.as_view(),
+        BusTerminalListView.as_view(),
         name="train_terminal_list",
     ),
     path(
         "timetable/",
-        TrainTimeTableListView.as_view(),
+        BusTimeTableListView.as_view(),
         name="train_time_table_list",
     ),
 ]

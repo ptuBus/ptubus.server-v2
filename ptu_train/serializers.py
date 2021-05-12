@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ptu_train.models import TrainTerminal, TrainTimeTable
+from .models import TrainTerminal, TrainTimeTable
 
 
 class TrainTerminalSerializer(serializers.ModelSerializer):

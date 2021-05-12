@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ptu_subway.models import (
+from .models import (
     SubwayLine,
     SubwayStation,
 )

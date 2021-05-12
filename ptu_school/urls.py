@@ -1,6 +1,6 @@
 from django.urls import path
 
-from ptu_school.views import SchoolBusTimeTableListView
+from .views import SchoolBusTimeTableListView
 
 urlpatterns = [
     path(

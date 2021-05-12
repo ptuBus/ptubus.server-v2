@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView
-from ptu_train.models import TrainTerminal, TrainTimeTable
-from ptu_train.serializers import (
+from .models import TrainTerminal, TrainTimeTable
+from .serializers import (
     TrainTerminalSerializer,
     TrainTimeTableSerializer,
 )
