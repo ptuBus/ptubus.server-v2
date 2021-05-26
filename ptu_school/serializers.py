@@ -9,4 +9,4 @@ class SchoolBusTimeTableSerializer(serializers.ModelSerializer):
 
 
 class SchoolBusTimeTableFilterSerializer(serializers.Serializer):
-    way = serializers.CharField(required=True)
+    way = serializers.CharField(required=False)

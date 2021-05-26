@@ -16,7 +16,10 @@ class SchoolBusTimeTableFilterBackend(BaseFilterBackend):
             data=request.GET,
         )
         serializer.is_valid(raise_exception=True)
-        queryset = queryset.filter(
-            up_down_type_code=serializer.validated_data.get("way"),
-        )
+
+        if way := serializer.validated_data.get("way"):
+            return queryset.filter(
+                up_down_type_code=way,
+            )
+
         return queryset
