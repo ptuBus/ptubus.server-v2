@@ -6,3 +6,7 @@ class SchoolBusTimeTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = SchoolBusTimeTable
         exclude = ("id",)
+
+
+class SchoolBusTimeTableFilterSerializer(serializers.Serializer):
+    way = serializers.CharField(required=True)
