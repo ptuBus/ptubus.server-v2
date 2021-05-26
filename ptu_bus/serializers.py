@@ -14,3 +14,12 @@ class BusTimeTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusTimeTable
         exclude = ("id",)
+
+
+class BusTerminalFilterSerializer(serializers.Serializer):
+    station_name = serializers.CharField(required=False)
+    is_express = serializers.BooleanField(required=False)
+
+
+class BusTimeTableFilterSerializer(serializers.Serializer):
+    station_id = serializers.CharField(required=False)
