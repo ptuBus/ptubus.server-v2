@@ -12,7 +12,7 @@ class TrainTerminal(models.Model):
     end_terminal_id = models.CharField(max_length=100)
 
     def __str__(self):
-        return {self.end_terminal_name}
+        return self.end_terminal_name
 
 
 class TrainTimeTable(models.Model):
@@ -31,3 +31,6 @@ class TrainTimeTable(models.Model):
     schedule = models.CharField(max_length=100)
     waste_time = models.CharField(max_length=100)
     daily_type_code = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.train_terminal.end_terminal_name
