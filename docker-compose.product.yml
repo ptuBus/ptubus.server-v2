@@ -26,7 +26,7 @@ services:
     volumes:
       - .:/code
     environment:
-      MYSQL_HOST: db
+      MYSQL_HOST: ptubus_db
       TZ: "Asia/Seoul"
     command:
       - bash
@@ -37,4 +37,4 @@ services:
     env_file:
       - ./.env.product
     depends_on:
-      - db
+      - ptubus_db
