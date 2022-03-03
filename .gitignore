@@ -31,7 +31,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -256,4 +255,11 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,django
 
 # For PTUBUS
-configs/sercret.json
+.env.product
+.env.dev
+
+#For Django
+staticfiles
+
+#For Mac
+.DS_Store

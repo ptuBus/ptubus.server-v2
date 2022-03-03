@@ -1,0 +1,3 @@
+[submodule "ptu_subway/KorailDB"]
+	path = ptu_subway/KorailDB
+	url = git@github.com:ptuBus/KorailDB.git
